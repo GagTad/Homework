@@ -1,0 +1,13 @@
+int minimumSwaps(vector<int> arr) {
+    int i = 0;
+    int count = 0;
+    while(i != arr.size()-1){
+        if(arr[i] == i+1){
+            ++i;
+        }else{
+            std::swap(arr[i], arr[arr[i]-1]);
+            ++count;
+        }
+    }
+    return count;
+}
