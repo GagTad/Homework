@@ -1,0 +1,17 @@
+vector<int> rotLeft(vector<int> a, int d) {
+    int n = a.size();
+    d = d % n;  
+    vector<int> rotated_array(n);  
+
+    
+    for (int i = 0; i < n - d; i++) {
+        rotated_array[i] = a[i + d];
+    }
+
+   
+    for (int i = n - d; i < n; i++) {
+        rotated_array[i] = a[i - (n - d)];
+    }
+
+    return rotated_array;
+}
