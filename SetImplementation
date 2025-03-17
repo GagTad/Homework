@@ -1,0 +1,129 @@
+#include <iostream>
+using namespace std;
+
+
+struct Node {
+    int data;
+    Node* left;
+    Node* right;
+
+    Node(int value) : data(value), left(nullptr), right(nullptr) {}
+};
+
+
+class Set {
+private:
+    Node* root;
+
+    
+    Node* insert(Node* node, int data) {
+        if (!node) return new Node(data);
+        if (data < node->data) node->left = insert(node->left, data);
+        else if (data > node->data) node->right = insert(node->right, data);
+        return node;
+    }
+
+    
+    Node* findMin(Node* node) {
+        while (node->left) node = node->left;
+        return node;
+    }
+
+    Node* Delete(Node* node, int data) {
+        if (!node) return node;
+        if (data < node->data) node->left = Delete(node->left, data);
+        else if (data > node->data) node->right = Delete(node->right, data);
+        else {
+            if (!node->left) {
+                Node* temp = node->right;
+                delete node;
+                return temp;
+            }
+            else if (!node->right) {
+                Node* temp = node->left;
+                delete node;
+                return temp;
+            }
+            Node* temp = findMin(node->right);
+            node->data = temp->data;
+            node->right = Delete(node->right, temp->data);
+        }
+        return node;
+    }
+
+  
+    bool Search(Node* node, int data) {
+        if (!node) return false;
+        if (data == node->data) return true;
+        return (data < node->data) ? Search(node->left, data) : Search(node->right, data);
+    }
+
+    
+    void Print(Node* node) {
+        if (!node) return;
+        Print(node->left);
+        cout << node->data << " ";
+        Print(node->right);
+    }
+
+
+    void clear(Node* node) {
+        if (!node) return;
+        clear(node->left);
+        clear(node->right);
+        delete node;
+    }
+
+public:
+    Set() : root(nullptr) {}
+
+    ~Set() { clear(root); }
+
+    
+    void insert(int data) { root = insert(root, data); }
+
+  
+    void Delete(int data) { root = Delete(root, data); }
+
+    
+    bool Search(int data) { return Search(root, data); }
+
+  
+    void Print() {
+        cout << "{ ";
+        Print(root);
+        cout << "}" << endl;
+    }
+
+  
+    void clear() {
+        clear(root);
+        root = nullptr;
+    }
+};
+
+int main() {
+    Set mySet;
+
+    mySet.insert(5);
+    mySet.insert(2);
+    mySet.insert(8);
+    mySet.insert(1);
+    mySet.insert(3);
+
+    cout << "Set = ";
+    mySet.Print();
+
+    cout << "Search 3: " << (mySet.Search(3) ? "Found" : "Not Found") << endl;
+    cout << "Search 7: " << (mySet.Search(7) ? "Found" : "Not Found") << endl;
+
+    mySet.Delete(2);
+    cout << "After deleting 2: ";
+    mySet.Print();
+
+    mySet.clear();
+    cout << "After clearing: ";
+    mySet.Print();
+
+    return 0;
+}
