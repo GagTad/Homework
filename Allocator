@@ -1,0 +1,49 @@
+#include <iostream>
+#include <cstdlib>  // malloc, free
+#include <cassert>
+
+template <typename T>
+class KBAllocator {
+private:
+    void* buffer = nullptr;  
+    std::size_t bufferSize = 1024; 
+    bool allocated = false; 
+
+public:
+   
+    T* allocate(std::size_t n) {
+        std::size_t requestedSize = n * sizeof(T);
+        if (requestedSize < bufferSize) requestedSize = bufferSize;
+
+        if (!allocated) {
+            buffer = std::malloc(requestedSize);
+            allocated = true;
+            std::cout << "Allocated " << requestedSize << " bytes\n";
+        }
+
+        assert(buffer != nullptr);
+        return static_cast<T*>(buffer);
+    }
+
+   
+    void deallocate(T* ptr, std::size_t /*n*/) {
+        if (allocated && ptr == buffer) {
+            std::free(buffer);
+            buffer = nullptr;
+            allocated = false;
+            std::cout << "Memory deallocated\n";
+        }
+    }
+
+    
+    template <typename... Args>
+    void construct(T* ptr, Args&&... args) {
+        new(ptr) T(std::forward<Args>(args)...);
+    }
+
+  
+    void destroy(T* ptr) {
+        ptr->~T();
+    }
+};
+
