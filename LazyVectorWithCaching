@@ -1,0 +1,38 @@
+#include <iostream>
+#include <vector>
+#include <unordered_map>
+#include <functional>
+
+template<typename T>
+class LazyVector {
+private:
+    size_t vec_size;
+    std::function<T(size_t)> compute_func;
+    mutable std::unordered_map<size_t, T> cache; 
+
+public:
+    LazyVector(size_t size, std::function<T(size_t)> func) 
+        : vec_size(size), compute_func(func) {}
+
+    T operator[](size_t index) const {
+        if (index >= vec_size) {
+            throw std::out_of_range("Index out of range");
+        }
+
+      
+        auto it = cache.find(index);
+        if (it != cache.end()) {
+            return it->second;
+        }
+
+       
+        T result = compute_func(index);
+        cache[index] = result;
+        return result;
+    }
+
+    size_t size() const {
+        return vec_size;
+    }
+};
+
