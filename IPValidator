@@ -1,0 +1,52 @@
+#include <iostream>
+#include <fstream>
+#include <unordered_set>
+#include <string>
+#include <sstream>
+#include <stdexcept>
+
+using namespace std;
+
+
+uint32_t ipToInt(const string& str) {
+    uint32_t result = 0;
+    int octet;
+    char dot;
+    istringstream ss(str);
+    
+  
+    for (int i = 0; i < 4; i++) {
+        if (!(ss >> octet) || octet < 0 || octet > 255) {
+            throw invalid_argument("Invalid IP format: " + str); 
+        }
+        result = (result << 8) | octet; 
+        if (i < 3 && !(ss >> dot && dot == '.')) {
+            throw invalid_argument("Invalid IP format: " + str); 
+        }
+    }
+    return result;
+}
+
+
+uint32_t countUniqueIPs(const string& filename) {
+    ifstream file(filename);
+    if (!file) {
+        cerr << "Cannot open the file: " << filename << endl;
+        return UINT32_MAX;
+    }
+
+    unordered_set<uint32_t> uniqueIPs;
+    string ip;
+    
+    while (file >> ip) {
+        try {
+           
+            uniqueIPs.insert(ipToInt(ip));
+        } catch (const exception& e) {
+            cerr << "Skipping invalid IP '" << ip << "': " << e.what() << endl;
+        }
+    }
+
+    return uniqueIPs.size();
+}
+
