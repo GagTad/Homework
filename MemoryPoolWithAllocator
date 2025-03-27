@@ -1,0 +1,62 @@
+#include <iostream>
+#include <memory>
+#include <stdexcept>
+
+
+template <typename T>
+class MemoryPoolAllocator {
+public:
+    using value_type = T;
+
+   
+    MemoryPoolAllocator(char* pool, size_t poolSize, size_t chunkSize)
+        : pool(pool), poolSize(poolSize), chunkSize(chunkSize), offset(0) {}
+
+   
+    T* allocate(std::size_t n) {
+        size_t size = n * sizeof(T);
+        if (offset + size <= poolSize) {
+            T* ptr = reinterpret_cast<T*>(pool + offset);
+            offset += size;
+            return ptr;
+        }
+        throw std::bad_alloc();  
+    }
+
+    
+    void deallocate(T* ptr, std::size_t n) {
+       
+    }
+
+private:
+    char* pool;       
+    size_t poolSize;  
+    size_t chunkSize; 
+    size_t offset;   
+};
+
+
+class MemoryPool {
+public:
+    MemoryPool(size_t poolSize, size_t chunkSize)
+        : poolSize(poolSize), chunkSize(chunkSize) {
+        pool = new char[poolSize]; 
+    }
+
+    ~MemoryPool() {
+        delete[] pool;  
+    }
+
+    
+    template <typename T>
+    T* allocate(std::size_t n) {
+        MemoryPoolAllocator<T> allocator(pool, poolSize, chunkSize);
+        return allocator.allocate(n);
+    }
+
+private:
+    char* pool;      
+    size_t poolSize; 
+    size_t chunkSize; 
+};
+
