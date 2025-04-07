@@ -102,28 +102,4 @@ public:
     }
 };
 
-int main() {
-    Set mySet;
 
-    mySet.insert(5);
-    mySet.insert(2);
-    mySet.insert(8);
-    mySet.insert(1);
-    mySet.insert(3);
-
-    cout << "Set = ";
-    mySet.Print();
-
-    cout << "Search 3: " << (mySet.Search(3) ? "Found" : "Not Found") << endl;
-    cout << "Search 7: " << (mySet.Search(7) ? "Found" : "Not Found") << endl;
-
-    mySet.Delete(2);
-    cout << "After deleting 2: ";
-    mySet.Print();
-
-    mySet.clear();
-    cout << "After clearing: ";
-    mySet.Print();
-
-    return 0;
-}
