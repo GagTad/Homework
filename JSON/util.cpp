@@ -26,7 +26,7 @@ std::string json::readFile(const char* filename) {
 		ret = sstream.str();
 	}
 	file.close();
-
+	std::cout << ret << std::endl;
 	return ret;
 }
 
