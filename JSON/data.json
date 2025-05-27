@@ -1,0 +1,16 @@
+{
+"employeers": [
+	{
+		"name": "Alexsander",
+		"age": 30,
+		"country": "Puerto Rico",
+		"isMAneger": false
+	},
+	{
+		"name": "George",
+		"age": 24,
+		"country": "USA ",
+		"isMAneger": true
+	}
+]
+}
