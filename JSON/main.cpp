@@ -1,35 +1,25 @@
-#include <iostream>
 
+#include <iostream>
+#include <fstream>
 #include "json.h"
 
 using namespace json;
 
-int main()
-{
+int main() {
+    std::cout << "Hello, JSON!" << std::endl;
 
-	std::cout << "Hello , JSON ! " << std::endl;
+    json_data d = json_util::read("data.json");
 
-	json_data d = json_util::read("data.json");
+  
+    d["employees"][0]["country"] = "Austria";
 
+    
+    std::cout << d.stringify() << std::endl;
 
+    
+    std::ofstream out("data.json");
+    out << d.stringify();
+    out.close();
 
-   json_data root ; 
-
-   // ???????
-
-
-   root["employeers"]["1"]["name"] = "Armen";
-   root["employeers"]["1"]["age"] = 26;
-   root["employeers"]["1"]["country"] = "Hayastan";
-
-   root["employeers"]["2"]["age"] = 70;
-   root["employeers"]["2"]["name"] = "Armenak";
-   root["employeers"]["2"]["country"] = "Rusastan";
-   
-
-   // ????????
-   json_util::write("data_modified.json", root);
-
-    std::cout << "DONE!\n";
-	return 0;
+    std::cout << d["employees"][0]["name"].stringify() << std::endl;
 }
