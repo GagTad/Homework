@@ -8,7 +8,7 @@ long arrayManipulation(int n, vector<vector<int>> queries) {
             arr[left] += value;
         }
         if(right < n){
-            arr[right] -= value;
+            arr[right]-= value;
         }
     }
     long max = numeric_limits<long>::min();
